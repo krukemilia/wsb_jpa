@@ -1,12 +1,17 @@
 package com.capgemini.wsb.persistence.entity;
 
 import java.time.LocalDate;
+import java.util.Collection;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
@@ -33,6 +38,18 @@ public class PatientEntity {
 
 	@Column(nullable = false)
 	private LocalDate dateOfBirth;
+
+	// relacja jednostronna od strony rodzica
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ADDRESS_ID")
+	private AddressEntity address;
+
+	//	relacja dwustronna
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinColumn(name = "DOCTOR_ID")
+	private Collection<DoctorEntity> doctors;
+
+	private Short visitCostDiscount;
 
 	public Long getId() {
 		return id;
@@ -88,6 +105,11 @@ public class PatientEntity {
 
 	public void setDateOfBirth(LocalDate dateOfBirth) {
 		this.dateOfBirth = dateOfBirth;
+	}
+
+	public Short getVisitCostDiscount() { return this.visitCostDiscount; }
+
+	public void setVisitCostDiscount(Short discount) { this.visitCostDiscount = discount; 
 	}
 
 }
